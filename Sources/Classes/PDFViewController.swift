@@ -127,7 +127,7 @@ public final class PDFViewController: UIViewController {
         collectionView.backgroundColor = backgroundColor
         collectionView.register(PDFPageCollectionViewCell.self, forCellWithReuseIdentifier: "page")
         
-        navigationItem.rightBarButtonItem = actionButton
+//        navigationItem.rightBarButtonItem = actionButton
         
         navigationItem.hidesBackButton = true
         
