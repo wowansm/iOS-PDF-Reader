@@ -42,7 +42,7 @@ public struct PDFViewUIProperties {
      - lineViewColor: color for the line view
      returns: a `PDFViewUIProperties`
      */
-    public init?(title: String?, titleFont: UIFont?, subtitle: String?, subtitleFont: UIFont?, backButtonImage: UIImage?, isThumbnailsEnabled: Bool = true, lineViewColor: UIColor?) {
+    public init(title: String?, titleFont: UIFont?, subtitle: String?, subtitleFont: UIFont?, backButtonImage: UIImage?, isThumbnailsEnabled: Bool = true, lineViewColor: UIColor?) {
         self.title = title
         self.titleFont = titleFont
         self.subtitle = subtitle
