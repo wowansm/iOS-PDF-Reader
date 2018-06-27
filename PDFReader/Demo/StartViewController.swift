@@ -63,10 +63,10 @@ internal final class StartViewController: UIViewController {
     ///
     /// Add `thumbnailsEnabled:false` to `createNew` to not load the thumbnails in the controller.
     private func showDocument(_ document: PDFDocument) {
-        if let properties = PDFViewUIProperties(title: "PDF", titleFont: UIFont(name: "Verdana", size: 16.0), subtitle: "subtitle", subtitleFont: UIFont(name: "Veradana", size: 13.0), backButtonImage: #imageLiteral(resourceName: "buttonBack64"), isThumbnailsEnabled: true, lineViewColor: .red) {
-            let controller = PDFViewController.createNew(with: document, properties: properties)
-            controller.backgroundColor = UIColor(red: 133 / 255, green: 132 / 255, blue: 138 / 255, alpha: 1.0)
-            navigationController?.pushViewController(controller, animated: true)
-        }
+        let properties = PDFViewUIProperties(title: "PDF", titleFont: UIFont(name: "Verdana", size: 16.0), subtitle: "subtitle", subtitleFont: UIFont(name: "Veradana", size: 13.0), backButtonImage: #imageLiteral(resourceName: "buttonBack64"), isThumbnailsEnabled: true, lineViewColor: .red)
+        let controller = PDFViewController.createNew(with: document, properties: properties)
+        controller.backgroundColor = UIColor(red: 133 / 255, green: 132 / 255, blue: 138 / 255, alpha: 1.0)
+        navigationController?.pushViewController(controller, animated: true)
+        
     }
 }
