@@ -10,14 +10,16 @@ import UIKit
 extension PDFViewController {
     /// Initializes a new `PDFViewController`
     ///
-    /// - parameter document:            PDF document to be displayed
-    /// - parameter properties:          PDFViewUIProperties comprising of values to and theme the UI components
+    /// - parameter document: PDF document to be displayed
+    /// - parameter pdfViewProperties: PDFViewUIProperties comprising values and theme for UI components
+    /// - parameter thumbnailUIProperties: PDFThumbnailUIProperties comprising theme for UI components
     /// - returns: a `PDFViewController`
-    public class func createNew(with document: PDFDocument, properties: PDFViewUIProperties) -> PDFViewController {
+    public class func createNew(with document: PDFDocument, pdfViewProperties: PDFViewUIProperties, thumbnailUIProperties: PDFThumbnailUIProperties) -> PDFViewController {
         let storyboard = UIStoryboard(name: "PDFReader", bundle: Bundle(for: PDFViewController.self))
         let controller = storyboard.instantiateInitialViewController() as! PDFViewController
         controller.document = document
-        controller.uiProperties = properties
+        controller.uiProperties = pdfViewProperties
+        controller.thumbnailUIProperties = thumbnailUIProperties
         
         return controller
     }
@@ -120,6 +122,9 @@ public final class PDFViewController: UIViewController {
     /// UI values
     private var uiProperties: PDFViewUIProperties?
     
+    ///Thumbnail UI properties
+    private var thumbnailUIProperties: PDFThumbnailUIProperties?
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
@@ -137,8 +142,6 @@ public final class PDFViewController: UIViewController {
         let thumbnailWidth = (numberOfPages * PDFThumbnailCell.cellSize.width) + totalSpacing
         let width = min(thumbnailWidth, view.bounds.width)
         thumbnailCollectionControllerWidth.constant = width
-        
-        lineViewSeparatingThumbnails.backgroundColor = backgroundColor
         
         if let properties = uiProperties {
             if let title = properties.title {
@@ -165,8 +168,13 @@ public final class PDFViewController: UIViewController {
             
             if let lineViewColor = properties.lineViewColor {
                 lineView.backgroundColor = lineViewColor
+                lineViewSeparatingThumbnails.backgroundColor = lineViewColor
             }
         }
+    }
+    
+    public override func didReceiveMemoryWarning() {
+        navigationController?.popViewController(animated: true)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -185,6 +193,7 @@ public final class PDFViewController: UIViewController {
         if let controller = segue.destination as? PDFThumbnailCollectionViewController {
             thumbnailCollectionController = controller
             controller.document = document
+            controller.uiProperties = thumbnailUIProperties
             controller.delegate = self
             controller.currentPageIndex = currentPageIndex
         }
@@ -301,6 +310,16 @@ extension PDFViewController: UIScrollViewDelegate {
         if updatedPageIndex != currentPageIndex {
             currentPageIndex = updatedPageIndex
             thumbnailCollectionController?.currentPageIndex = currentPageIndex
+        }
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if navigationViewTop.constant != -navigationViewHeight.constant {
+            navigationViewTop.constant = -navigationViewHeight.constant
+            thumbnailCollectionControllerBottom.constant = -thumbnailCollectionControllerHeight.constant
+        }
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
         }
     }
 }

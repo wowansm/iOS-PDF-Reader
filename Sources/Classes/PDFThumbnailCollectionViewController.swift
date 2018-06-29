@@ -15,7 +15,7 @@ protocol PDFThumbnailControllerDelegate: class {
 }
 
 /// Bottom collection of thumbnails that the user can interact with
-internal final class PDFThumbnailCollectionViewController: UICollectionViewController {
+internal final class PDFThumbnailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     /// Current document being displayed
     var document: PDFDocument!
     
@@ -23,11 +23,11 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
     var currentPageIndex: Int = 0 {
         didSet {
             guard let collectionView = collectionView else { return }
-            guard let pageImages = pageImages else { return }
-            guard pageImages.count > 0 else { return }
-            let curentPageIndexPath = IndexPath(row: currentPageIndex, section: 0)
-            if !collectionView.indexPathsForVisibleItems.contains(curentPageIndexPath) {
-                collectionView.scrollToItem(at: curentPageIndexPath, at: .centeredHorizontally, animated: true)
+            if currentPageIndex < collectionView.numberOfItems(inSection: 0) {
+                let curentPageIndexPath = IndexPath(row: currentPageIndex, section: 0)
+                if !collectionView.indexPathsForVisibleItems.contains(curentPageIndexPath) {
+                    collectionView.scrollToItem(at: curentPageIndexPath, at: .centeredHorizontally, animated: true)
+                }
             }
             collectionView.reloadData()
         }
@@ -43,6 +43,9 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
         }
     }
     
+    /// UI properties
+    var uiProperties: PDFThumbnailUIProperties?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global(qos: .background).async { [weak self] in
@@ -57,23 +60,43 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pageImages?.count ?? 0
+        return self.document.pageCount
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
         if let thumbnailCell = cell as? PDFThumbnailCell {
             thumbnailCell.imageView?.image = pageImages?[indexPath.row]
-            thumbnailCell.alpha = currentPageIndex == indexPath.row ? 1 : 0.2
         }
+        
+        if let activeBorderColor = uiProperties?.activeThumbnailBorderColor,
+            let inactiveBorderColor = uiProperties?.inactiveThumbnailBorderColor { // if border colors are available, apply them
+            let borderColor = currentPageIndex == indexPath.row ? activeBorderColor : inactiveBorderColor
+            cell.layer.borderColor = borderColor.cgColor
+            cell.layer.borderWidth = 1.0
+        } else { // else change the alpha
+            cell.alpha = currentPageIndex == indexPath.row ? 1 : 0.2
+        }
+        
         return cell
     }
     
-    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return PDFThumbnailCell.cellSize
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.didSelectIndexPath(indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2.0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if collectionView.bounds.width >= UIScreen.main.bounds.width {
+            return UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        }
+        return UIEdgeInsets.zero
     }
 }
