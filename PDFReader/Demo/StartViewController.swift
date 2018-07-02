@@ -62,7 +62,7 @@ internal final class StartViewController: UIViewController {
     /// - parameter document: document to present
     ///
     private func showDocument(_ document: PDFDocument) {
-        let pdfViewProperties = PDFViewUIProperties(title: "PDF", titleFont: UIFont(name: "Verdana", size: 16.0), subtitle: "subtitle", subtitleFont: UIFont(name: "Veradana", size: 13.0), backButtonImage: #imageLiteral(resourceName: "buttonBack64"), isThumbnailsEnabled: true, lineViewColor: .red)
+        let pdfViewProperties = PDFViewUIProperties(guid: "123", title: "PDF", titleFont: UIFont(name: "Verdana", size: 16.0), subtitle: "subtitle", subtitleFont: UIFont(name: "Veradana", size: 13.0), backButtonImage: #imageLiteral(resourceName: "buttonBack64"), isThumbnailsEnabled: true, lineViewColor: .red)
         let thumbnailUIProperties = PDFThumbnailUIProperties(activeThumbnailBorderColor: .black, inactiveThumbnailBorderColor: .lightGray)
         let controller = PDFViewController.createNew(with: document, pdfViewProperties: pdfViewProperties, thumbnailUIProperties: thumbnailUIProperties)
         controller.backgroundColor = UIColor(red: 133 / 255, green: 132 / 255, blue: 138 / 255, alpha: 1.0)
