@@ -67,6 +67,5 @@ internal final class StartViewController: UIViewController {
         let controller = PDFViewController.createNew(with: document, pdfViewProperties: pdfViewProperties, thumbnailUIProperties: thumbnailUIProperties)
         controller.backgroundColor = UIColor(red: 133 / 255, green: 132 / 255, blue: 138 / 255, alpha: 1.0)
         navigationController?.pushViewController(controller, animated: true)
-        
     }
 }

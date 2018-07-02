@@ -26,7 +26,7 @@ extension PDFViewController {
 }
 
 /// Controller that is able to interact and navigate through pages of a `PDFDocument`
-public final class PDFViewController: UIViewController {
+public class PDFViewController: UIViewController {
     /// Action button style
     public enum ActionStyle {
         /// Brings up a print modal allowing user to print current PDF
