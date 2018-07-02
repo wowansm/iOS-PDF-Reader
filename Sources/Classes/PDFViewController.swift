@@ -120,7 +120,7 @@ public class PDFViewController: UIViewController {
     }
     
     /// UI values
-    private var uiProperties: PDFViewUIProperties?
+    public var uiProperties: PDFViewUIProperties?
     
     ///Thumbnail UI properties
     private var thumbnailUIProperties: PDFThumbnailUIProperties?
