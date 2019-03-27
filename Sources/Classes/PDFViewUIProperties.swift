@@ -34,7 +34,7 @@ public struct PDFViewUIProperties {
     public var guid: String
     
     /// specifies whether the pdf is accessible without subscription. Used for analytics
-    public var hasFreeUsagePolicy: Bool?
+    public var hasFreeUsagePolicy: Bool
     
     /**
      Returns newly initialised PDFViewUIProperties
@@ -49,7 +49,7 @@ public struct PDFViewUIProperties {
      - hasFreeUsagePolicy: availability to users without subscription
      returns: a `PDFViewUIProperties`
      */
-    public init(guid: String, title: String? = nil, titleFont: UIFont? = nil, subtitle: String? = nil, subtitleFont: UIFont? = nil, backButtonImage: UIImage? = nil, isThumbnailsEnabled: Bool = true, lineViewColor: UIColor? = nil, hasFreeUsagePolicy: Bool? = nil) {
+    public init(guid: String, title: String? = nil, titleFont: UIFont? = nil, subtitle: String? = nil, subtitleFont: UIFont? = nil, backButtonImage: UIImage? = nil, isThumbnailsEnabled: Bool = true, lineViewColor: UIColor? = nil, hasFreeUsagePolicy: Bool = false) {
         self.guid = guid
         self.title = title
         self.titleFont = titleFont
