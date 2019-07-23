@@ -9,7 +9,7 @@
 import UIKit
 
 /// Delegate that is informed of important interaction events with the current thumbnail collection view
-protocol PDFThumbnailControllerDelegate: class {
+protocol PDFThumbnailControllerDelegate: AnyObject {
     /// User has tapped on thumbnail
     func didSelectIndexPath(_ indexPath: IndexPath)
 }
@@ -18,7 +18,7 @@ protocol PDFThumbnailControllerDelegate: class {
 internal final class PDFThumbnailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     /// Current document being displayed
     var document: PDFDocument!
-    
+
     /// Current page index being displayed
     var currentPageIndex: Int = 0 {
         didSet {
@@ -32,20 +32,20 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
             collectionView.reloadData()
         }
     }
-    
+
     /// Calls actions when certain cells have been interacted with
     weak var delegate: PDFThumbnailControllerDelegate?
-    
+
     /// Small thumbnail image representations of the pdf pages
     private var pageImages: [UIImage]? {
         didSet {
             collectionView?.reloadData()
         }
     }
-    
+
     /// UI properties
     var uiProperties: PDFThumbnailUIProperties?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global(qos: .background).async { [weak self] in
@@ -68,7 +68,7 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
         if let thumbnailCell = cell as? PDFThumbnailCell {
             thumbnailCell.imageView?.image = pageImages?[indexPath.row]
         }
-        
+
         if let activeBorderColor = uiProperties?.activeThumbnailBorderColor,
             let inactiveBorderColor = uiProperties?.inactiveThumbnailBorderColor { // if border colors are available, apply them
             let borderColor = currentPageIndex == indexPath.row ? activeBorderColor : inactiveBorderColor
@@ -77,22 +77,23 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
         } else { // else change the alpha
             cell.alpha = currentPageIndex == indexPath.row ? 1 : 0.2
         }
-        
+
         return cell
     }
-    
-    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+    @objc
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return PDFThumbnailCell.cellSize
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.didSelectIndexPath(indexPath)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 2.0
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         if collectionView.bounds.width >= UIScreen.main.bounds.width {
             return UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)

@@ -11,10 +11,10 @@ import Foundation
 public struct PDFThumbnailUIProperties {
     /// Border color for thumbnail for visible page (active)
     public var activeThumbnailBorderColor: UIColor?
-    
+
     /// Border color for thumbnails for invisible pages (inactive)
     public var inactiveThumbnailBorderColor: UIColor?
-    
+
     /**
      Returns newly initialised PDFThumbnailUIProperties
      

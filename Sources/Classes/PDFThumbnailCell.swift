@@ -12,6 +12,7 @@ import UIKit
 internal final class PDFThumbnailCell: UICollectionViewCell {
     /// Preferred size of each cell
     static let cellSize = CGSize(width: 18, height: 22)
-    
+
+    // swiftlint:disable private_outlet
     @IBOutlet var imageView: UIImageView?
 }
