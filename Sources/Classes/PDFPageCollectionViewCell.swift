@@ -9,7 +9,7 @@
 import UIKit
 
 /// Delegate that is informed of important interaction events with the pdf page collection view
-protocol PDFPageCollectionViewCellDelegate: class {
+protocol PDFPageCollectionViewCellDelegate: AnyObject {
     func handleSingleTap(_ cell: PDFPageCollectionViewCell, pdfPageView: PDFPageView)
 }
 
@@ -17,21 +17,20 @@ protocol PDFPageCollectionViewCellDelegate: class {
 internal final class PDFPageCollectionViewCell: UICollectionViewCell {
     /// Index of the page
     var pageIndex: Int?
-    
+
     /// Page view of the current page in the document
     var pageView: PDFPageView? {
         didSet {
-            subviews.forEach{ $0.removeFromSuperview() }
+            subviews.forEach { $0.removeFromSuperview() }
             if let pageView = pageView {
                 addSubview(pageView)
             }
         }
     }
-    
+
     /// Delegate informed of important events
     private weak var pageCollectionViewCellDelegate: PDFPageCollectionViewCellDelegate?
-    
-    
+
     /// Customizes and sets up the cell to be ready to be displayed
     ///
     /// - parameter indexPathRow:                   page index of the document to be displayed
